@@ -30,7 +30,7 @@ async function getOrCreateTabGroup(groupName) {
   // グループ名を設定
   await chrome.tabGroups.update(groupId, { 
     title: groupName,
-    color: 'blue'
+    color: 'red'
   });
   
   return groupId;
