@@ -1,11 +1,17 @@
 // External Link Catcher - Background Script
 
-import { DEFAULT_GROUP_NAME, DEFAULT_GROUP_COLOR } from './constants.js';
+import { DEFAULT_GROUP_NAME, DEFAULT_GROUP_COLOR, DEFAULT_ACTIVATE_WINDOW } from './constants.js';
 
 // 設定を取得する関数
 async function getGroupName() {
   const result = await chrome.storage.sync.get(['groupName']);
   return result.groupName || DEFAULT_GROUP_NAME;
+}
+
+// ウィンドウアクティブ設定を取得する関数
+async function shouldActivateWindow() {
+  const result = await chrome.storage.sync.get(['activateWindow']);
+  return result.activateWindow !== undefined ? result.activateWindow : DEFAULT_ACTIVATE_WINDOW;
 }
 
 // タブグループを取得する関数
@@ -52,12 +58,23 @@ async function moveTabToGroup(tabId, shouldActivate = false) {
       groupId = await moveTabToNewGroup(tabId, groupName);
     }
     
+    // 設定に応じてウィンドウをアクティブにする
+    const activateWindow = await shouldActivateWindow();
+    if (activateWindow) {
+      const tab = await chrome.tabs.get(tabId);
+      if (tab.windowId) {
+        // タブが属するウィンドウをアクティブにする
+        await chrome.windows.update(tab.windowId, { focused: true });
+      }
+    }
+    
     // 必要に応じてタブをアクティブにする
     if (shouldActivate) {
       await chrome.tabs.update(tabId, { active: true });
     }
     
-    console.log(`Tab moved to group "${groupName}"`);
+    const windowStatus = activateWindow ? " and window activated" : "";
+    console.log(`Tab moved to group "${groupName}"${windowStatus}`);
   } catch (error) {
     console.error('Error moving tab to group:', error);
   }
