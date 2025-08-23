@@ -1,6 +1,6 @@
 // External Link Catcher - Background Script
 
-import { DEFAULT_GROUP_NAME } from './constants.js';
+import { DEFAULT_GROUP_NAME, DEFAULT_GROUP_COLOR } from './constants.js';
 
 // 設定を取得する関数
 async function getGroupName() {
@@ -29,7 +29,7 @@ async function getOrCreateTabGroup(groupName) {
   // グループ名を設定
   await chrome.tabGroups.update(groupId, { 
     title: groupName,
-    color: 'red'
+    color: DEFAULT_GROUP_COLOR
   });
   
   return groupId;
