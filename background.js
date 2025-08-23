@@ -1,7 +1,6 @@
 // External Link Catcher - Background Script
 
-// デフォルト設定
-const DEFAULT_GROUP_NAME = 'today';
+import { DEFAULT_GROUP_NAME } from './constants.js';
 
 // 設定を取得する関数
 async function getGroupName() {

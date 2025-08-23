@@ -1,6 +1,6 @@
 // External Link Catcher - Popup Script
 
-const DEFAULT_GROUP_NAME = 'today';
+import { DEFAULT_GROUP_NAME } from './constants.js';
 
 // DOM要素を取得
 document.addEventListener('DOMContentLoaded', async () => {
