@@ -8,8 +8,8 @@ async function getGroupName() {
   return result.groupName || DEFAULT_GROUP_NAME;
 }
 
-// タブグループを取得または作成する関数
-async function getOrCreateTabGroup(groupName) {
+// タブグループを取得する関数
+async function getExistingTabGroup(groupName) {
   // 既存のタブグループを検索
   const tabGroups = await chrome.tabGroups.query({});
   const existingGroup = tabGroups.find(group => group.title === groupName);
@@ -18,15 +18,15 @@ async function getOrCreateTabGroup(groupName) {
     return existingGroup.id;
   }
   
-  // 新しいタブを作成
-  const tab = await chrome.tabs.create({ active: false });
+  return null;
+}
+
+// タブを新しいグループに移動する関数
+async function moveTabToNewGroup(tabId, groupName) {
+  // タブをグループ化してグループを作成
+  const groupId = await chrome.tabs.group({ tabIds: [tabId] });
   
-  // タブグループを作成
-  const groupId = await chrome.tabs.group({ 
-    tabIds: [tab.id] 
-  });
-  
-  // グループ名を設定
+  // グループ名と色を設定
   await chrome.tabGroups.update(groupId, { 
     title: groupName,
     color: DEFAULT_GROUP_COLOR
@@ -42,13 +42,18 @@ chrome.tabs.onCreated.addListener(async (tab) => {
   if (tab.openerTabId === undefined && tab.url && tab.url.startsWith('http')) {
     try {
       const groupName = await getGroupName();
-      const groupId = await getOrCreateTabGroup(groupName);
+      let groupId = await getExistingTabGroup(groupName);
       
-      // タブをグループに移動
-      await chrome.tabs.group({
-        tabIds: [tab.id],
-        groupId: groupId
-      });
+      if (groupId) {
+        // 既存のグループに移動
+        await chrome.tabs.group({
+          tabIds: [tab.id],
+          groupId: groupId
+        });
+      } else {
+        // 新しいグループを作成して移動
+        groupId = await moveTabToNewGroup(tab.id, groupName);
+      }
       
       // タブをアクティブにする
       await chrome.tabs.update(tab.id, { active: true });
@@ -70,13 +75,18 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     
     try {
       const groupName = await getGroupName();
-      const groupId = await getOrCreateTabGroup(groupName);
+      let groupId = await getExistingTabGroup(groupName);
       
-      // タブをグループに移動
-      await chrome.tabs.group({
-        tabIds: [tabId],
-        groupId: groupId
-      });
+      if (groupId) {
+        // 既存のグループに移動
+        await chrome.tabs.group({
+          tabIds: [tabId],
+          groupId: groupId
+        });
+      } else {
+        // 新しいグループを作成して移動
+        groupId = await moveTabToNewGroup(tabId, groupName);
+      }
       
       console.log(`Updated tab moved to group "${groupName}"`);
     } catch (error) {
