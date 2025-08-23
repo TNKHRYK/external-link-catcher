@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>External Link Catcher Settings</title>
+    <style>
+        body {
+            width: 320px;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 18px;
+            margin: 0;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 12px;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3367d6;
+        }
+        
+        button:active {
+            background-color: #2c5aa0;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.show {
+            opacity: 1;
+        }
+        
+        .current-group {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 6px;
+            border: 1px solid #bee5eb;
+        }
+        
+        .current-group h3 {
+            margin: 0 0 5px 0;
+            font-size: 12px;
+            color: #0c5460;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .current-group p {
+            margin: 0;
+            font-size: 14px;
+            color: #0c5460;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>External Link Catcher</h1>
+        <p>タブグループ設定</p>
+    </div>
+    
+    <form id="settingsForm">
+        <div class="form-group">
+            <label for="groupName">タブグループ名:</label>
+            <input type="text" id="groupName" placeholder="today" required>
+        </div>
+        <button type="submit">設定を保存</button>
+    </form>
+    
+    <div class="current-group">
+        <h3>現在の設定</h3>
+        <p id="currentGroup">today</p>
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
