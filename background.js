@@ -95,9 +95,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.url && 
       tab.openerTabId === undefined && 
       changeInfo.url.startsWith('http') &&
-      tab.groupId === -1 && // グループに属していない場合
-      tab.pendingUrl && // 新規タブからの遷移
-      !changeInfo.url.includes('chrome://')) { // Chrome内部ページでない
+      tab.groupId === -1) { // グループに属していない場合
     
     await moveTabToGroup(tabId, false);
   }
